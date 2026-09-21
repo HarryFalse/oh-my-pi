@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added Grok 4.7 for paid xAI and SuperGrok, with 500K context, image input, four reasoning levels defaulting to high, and 200K long-context pricing.
+
 ## [18.1.9] - 2026-09-04
 
 ### Added

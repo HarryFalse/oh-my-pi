@@ -9,6 +9,11 @@ import { resolveModelPolicy } from "@oh-my-pi/pi-catalog/compat/resolve";
 import { Effort } from "@oh-my-pi/pi-catalog/effort";
 import { readModelCache, writeModelCache } from "@oh-my-pi/pi-catalog/model-cache";
 import { resolveProviderModels } from "@oh-my-pi/pi-catalog/model-manager";
+import {
+	clampThinkingLevelForModel,
+	getSupportedEfforts,
+	requireSupportedEffort,
+} from "@oh-my-pi/pi-catalog/model-thinking";
 import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
 import { openrouterModelManagerOptions } from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
 import type { Api, Model, ModelSpec } from "@oh-my-pi/pi-catalog/types";
@@ -368,6 +373,15 @@ describe("xAI Responses reasoning-effort suppression", () => {
 		expect(model.compat.omitReasoningEffort).toBe(false);
 		expect(model.thinking?.efforts).toContain(Effort.XHigh);
 		expect(model.thinking?.efforts).not.toContain(Effort.Max);
+	});
+
+	it("normalizes paid grok-4.7 requests onto its four supported efforts", () => {
+		const model = buildModel(grokResponsesSpec("grok-4.7", "xai"));
+		expect(getSupportedEfforts(model)).toEqual([Effort.Low, Effort.Medium, Effort.High, Effort.XHigh]);
+		expect(clampThinkingLevelForModel(model, Effort.Minimal)).toBe(Effort.Low);
+		expect(clampThinkingLevelForModel(model, Effort.Max)).toBe(Effort.XHigh);
+		expect(requireSupportedEffort(model, Effort.XHigh)).toBe(Effort.XHigh);
+		expect(() => requireSupportedEffort(model, Effort.Minimal)).toThrow();
 	});
 
 	it("lets an explicit compat.supportsReasoningEffort override the allowlist default", () => {

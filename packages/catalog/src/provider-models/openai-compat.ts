@@ -1542,6 +1542,8 @@ interface XAICuratedModel {
 	 * otherwise strips image capability on every online refresh).
 	 */
 	input?: ("text" | "image")[];
+	/** Documented token prices for curated subscription entries. */
+	cost?: ModelSpec["cost"];
 }
 
 // Source of truth for the xai-oauth chat picker. Top of list = headline.
@@ -1571,6 +1573,14 @@ export const XAI_OAUTH_CURATED_MODELS: readonly XAICuratedModel[] = [
 	{ id: "grok-4.3", contextWindow: 1_000_000, name: "Grok 4.3", input: ["text", "image"] },
 	{ id: "grok-4.5", contextWindow: 500_000, name: "Grok 4.5", input: ["text", "image"] },
 	{ id: "grok-4.6", contextWindow: 500_000, name: "Grok 4.6", input: ["text", "image"] },
+	// Confirmed in authenticated /v1/models; capabilities: low/medium/high/xhigh.
+	{
+		id: "grok-4.7",
+		contextWindow: 500_000,
+		name: "Grok 4.7",
+		input: ["text", "image"],
+		cost: { input: 2, output: 6, cacheRead: 0.5, cacheWrite: 0 },
+	},
 	// grok-4.20-multi-agent-0309 is text-only per the bundled catalog; omit `input` for the default.
 	{ id: "grok-4.20-multi-agent-0309", contextWindow: 2_000_000, name: "Grok 4.20 (Multi-Agent)" },
 	{
@@ -1694,6 +1704,7 @@ function mergeCuratedIntoModel(
 		name: curated.name ?? base.name,
 		reasoning: curated.reasoning ?? true,
 		input: curated.input ?? base.input,
+		cost: curated.cost ?? base.cost,
 		compat,
 	};
 }
@@ -1738,7 +1749,13 @@ function applyXAIOAuthCuration(dynamic: readonly ModelSpec<"openai-responses">[]
 				// Reset id/name on the template before merging so the helper's
 				// `curated.name ?? base.name` clause falls back to curated.id
 				// (the inject contract), not to the unrelated template's label.
-				const base: ModelSpec<"openai-responses"> = { ...template, id: curated.id, name: curated.id };
+				// Derive the injected model's own effort ladder, not the donor's.
+				const base: ModelSpec<"openai-responses"> = {
+					...template,
+					id: curated.id,
+					name: curated.id,
+					thinking: undefined,
+				};
 				byId.set(curated.id, mergeCuratedIntoModel(base, curated));
 			}
 		}

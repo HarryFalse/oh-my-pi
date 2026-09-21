@@ -34,6 +34,26 @@ class "xai" {
 			}
 		}
 	}
+	// First-party Grok 4.7: https://docs.x.ai/developers/models/grok-4.7
+	// https://docs.x.ai/developers/model-capabilities/text/reasoning
+	// Grok 4.7 corrections override stale discovery capability metadata.
+	// SuperGrok availability and matching metadata confirmed via /v1/models.
+	on "xai" "xai-oauth" {
+		models "grok-4.7*" {
+			thinking-efforts "low" "medium" "high" "xhigh"
+			thinking-default-level "high"
+			thinking-requires-effort #true
+			input-modalities "text" "image"
+			limits-patch {
+				context-window 500000
+			}
+			long-context-cost {
+				input-threshold 200000
+				input-threshold-inclusive #true
+				multiplier 2.0
+			}
+		}
+	}
 	on "xai-oauth" {
 		family "grok" {
 			revision ">=0.1 <4.3" {

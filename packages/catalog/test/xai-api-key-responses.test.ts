@@ -3,10 +3,16 @@ import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 import { buildModel } from "@oh-my-pi/pi-catalog/build";
+import { Effort } from "@oh-my-pi/pi-catalog/effort";
 import { resolveProviderModels } from "@oh-my-pi/pi-catalog/model-manager";
+import { getSupportedEfforts, requireSupportedEffort } from "@oh-my-pi/pi-catalog/model-thinking";
 import { calculateCost, getBundledModels } from "@oh-my-pi/pi-catalog/models";
 import { CATALOG_PROVIDERS, DEFAULT_MODEL_PER_PROVIDER } from "@oh-my-pi/pi-catalog/provider-models/descriptors";
-import { applyXaiCatalogPricing, xaiModelManagerOptions } from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
+import {
+	applyXaiCatalogPricing,
+	xaiModelManagerOptions,
+	xaiOAuthModelManagerOptions,
+} from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
 import type { ModelSpec, Usage } from "@oh-my-pi/pi-catalog/types";
 
 const XAI_RESPONSES_SPEC: ModelSpec<"openai-responses"> = {
@@ -138,6 +144,19 @@ describe("paid xai (XAI_API_KEY) Responses contract", () => {
 			cacheWrite: 0,
 		});
 		expect(buildModel(oauth).cost).toEqual(buildModel(paid).cost);
+	});
+
+	it("preserves Grok 4.7 xhigh when OAuth discovery injects it from a Grok 4.3 row", async () => {
+		const options = xaiOAuthModelManagerOptions({
+			apiKey: "test-key",
+			fetch: async () => Response.json({ data: [{ id: "grok-4.3" }] }),
+		});
+		const discovered = await options.fetchDynamicModels?.();
+		const spec = discovered?.find(model => model.id === "grok-4.7");
+		if (!spec) throw new Error("Grok 4.7 was not injected into discovery");
+		const model = buildModel(spec);
+		expect(getSupportedEfforts(model)).toEqual([Effort.Low, Effort.Medium, Effort.High, Effort.XHigh]);
+		expect(requireSupportedEffort(model, Effort.XHigh)).toBe(Effort.XHigh);
 	});
 
 	it("drops stale Chat Completions cache rows so Responses takes effect immediately", async () => {

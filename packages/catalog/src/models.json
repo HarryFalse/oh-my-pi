@@ -364536,6 +364536,117 @@
 				}
 			}
 		},
+		"grok-4.7": {
+			"id": "grok-4.7",
+			"name": "Grok 4.7",
+			"api": "openai-responses",
+			"provider": "xai",
+			"baseUrl": "https://api.x.ai/v1",
+			"reasoning": true,
+			"input": [
+				"text",
+				"image"
+			],
+			"cost": {
+				"input": 2,
+				"output": 6,
+				"cacheRead": 0.5,
+				"cacheWrite": 0,
+				"longContext": {
+					"inputThreshold": 200000,
+					"inputThresholdInclusive": true,
+					"input": 4,
+					"output": 12,
+					"cacheRead": 1,
+					"cacheWrite": 0
+				}
+			},
+			"contextWindow": 500000,
+			"maxTokens": 500000,
+			"compat": {
+				"supportsDeveloperRole": false,
+				"supportsStrictMode": false,
+				"supportsReasoningEffort": true,
+				"supportsLongPromptCacheRetention": false,
+				"supportsPromptCacheBreakpoints": false,
+				"strictResponsesPairing": false,
+				"supportsImageDetailOriginal": false,
+				"supportsReasoningSummary": false,
+				"supportsAllTurnsReasoningContext": false,
+				"supportsConfigurationUpdate": false,
+				"requiresReasoningOffJuiceInstruction": false,
+				"stripImageInput": false,
+				"thinkingLoopGuard": "xai",
+				"reasoningEffortMap": {
+					"minimal": "low"
+				},
+				"supportsReasoningParams": true,
+				"supportsSamplingParams": true,
+				"supportsPenaltyAndStopParams": false,
+				"thinkingFormat": "openai",
+				"reasoningDisableMode": "lowest-effort",
+				"omitReasoningEffort": false,
+				"includeEncryptedReasoning": true,
+				"filterReasoningHistory": false,
+				"disableReasoningOnForcedToolChoice": false,
+				"disableReasoningOnToolChoice": false,
+				"supportsToolChoice": true,
+				"supportsForcedToolChoice": true,
+				"supportsNamedToolChoice": true,
+				"reasoningContentField": "reasoning_content",
+				"requiresReasoningContentForToolCalls": false,
+				"requiresReasoningContentForAllAssistantTurns": false,
+				"allowsSyntheticReasoningContentForToolCalls": true,
+				"replayReasoningContent": false,
+				"qwenPreserveThinking": false,
+				"qwenTemplateReasoningEffort": false,
+				"requiresThinkingAsText": false,
+				"requiresMistralToolIds": false,
+				"requiresToolResultName": false,
+				"requiresAssistantAfterToolResult": false,
+				"requiresAssistantContentForToolCalls": false,
+				"isOpenRouterHost": false,
+				"isVercelGatewayHost": false,
+				"wireModelIdMode": "raw",
+				"alwaysSendMaxTokens": false,
+				"supportsObfuscationOptOut": false,
+				"officialEndpoint": false,
+				"harmonyLeakMitigation": false,
+				"rejectRootObjectUnion": true,
+				"retryWithoutStrictOnGrammarError": false,
+				"stripDeepseekSpecialTokens": false,
+				"streamMarkupHealingPattern": "thinking",
+				"reasoningDeltasMayBeCumulative": false,
+				"emptyLengthFinishIsContextError": false,
+				"usesOpenAIToolCallIdLimit": false,
+				"promptCacheSessionHeader": "x-grok-conv-id"
+			},
+			"thinking": {
+				"mode": "effort",
+				"efforts": [
+					"low",
+					"medium",
+					"high",
+					"xhigh"
+				],
+				"defaultLevel": "high",
+				"requiresEffort": true
+			},
+			"identity": {
+				"class": "xai",
+				"family": "grok",
+				"revision": "4.7.0"
+			},
+			"requiresGlyphTokenization": false,
+			"supportsComputerUse": false,
+			"compatConfig": {
+				"supportsReasoningEffort": true,
+				"omitReasoningEffort": false,
+				"reasoningEffortMap": {
+					"minimal": "low"
+				}
+			}
+		},
 		"grok-beta": {
 			"id": "grok-beta",
 			"name": "Grok Beta",
@@ -365585,6 +365696,120 @@
 				"supportsImageDetailOriginal": false,
 				"omitReasoningEffort": false,
 				"supportsReasoningEffort": true
+			}
+		},
+		"grok-4.7": {
+			"id": "grok-4.7",
+			"name": "Grok 4.7",
+			"api": "openai-responses",
+			"provider": "xai-oauth",
+			"baseUrl": "https://api.x.ai/v1",
+			"reasoning": true,
+			"input": [
+				"text",
+				"image"
+			],
+			"cost": {
+				"input": 2,
+				"output": 6,
+				"cacheRead": 0.5,
+				"cacheWrite": 0,
+				"longContext": {
+					"inputThreshold": 200000,
+					"inputThresholdInclusive": true,
+					"input": 4,
+					"output": 12,
+					"cacheRead": 1,
+					"cacheWrite": 0
+				}
+			},
+			"contextWindow": 500000,
+			"maxTokens": 500000,
+			"identity": {
+				"class": "xai",
+				"family": "grok",
+				"revision": "4.7.0"
+			},
+			"requiresGlyphTokenization": false,
+			"thinking": {
+				"mode": "effort",
+				"efforts": [
+					"low",
+					"medium",
+					"high",
+					"xhigh"
+				],
+				"defaultLevel": "high",
+				"requiresEffort": true
+			},
+			"compat": {
+				"supportsDeveloperRole": false,
+				"supportsStrictMode": false,
+				"supportsReasoningEffort": true,
+				"supportsLongPromptCacheRetention": false,
+				"supportsPromptCacheBreakpoints": false,
+				"strictResponsesPairing": false,
+				"supportsImageDetailOriginal": false,
+				"supportsReasoningSummary": false,
+				"supportsAllTurnsReasoningContext": false,
+				"supportsConfigurationUpdate": false,
+				"requiresReasoningOffJuiceInstruction": false,
+				"stripImageInput": false,
+				"thinkingLoopGuard": "xai",
+				"reasoningEffortMap": {
+					"minimal": "low"
+				},
+				"supportsReasoningParams": true,
+				"supportsSamplingParams": true,
+				"supportsPenaltyAndStopParams": false,
+				"thinkingFormat": "openai",
+				"reasoningDisableMode": "lowest-effort",
+				"omitReasoningEffort": false,
+				"includeEncryptedReasoning": true,
+				"filterReasoningHistory": false,
+				"disableReasoningOnForcedToolChoice": false,
+				"disableReasoningOnToolChoice": false,
+				"supportsToolChoice": true,
+				"supportsForcedToolChoice": true,
+				"supportsNamedToolChoice": true,
+				"reasoningContentField": "reasoning_content",
+				"requiresReasoningContentForToolCalls": false,
+				"requiresReasoningContentForAllAssistantTurns": false,
+				"allowsSyntheticReasoningContentForToolCalls": true,
+				"replayReasoningContent": false,
+				"qwenPreserveThinking": false,
+				"qwenTemplateReasoningEffort": false,
+				"requiresThinkingAsText": false,
+				"requiresMistralToolIds": false,
+				"requiresToolResultName": false,
+				"requiresAssistantAfterToolResult": false,
+				"requiresAssistantContentForToolCalls": false,
+				"isOpenRouterHost": false,
+				"isVercelGatewayHost": false,
+				"wireModelIdMode": "raw",
+				"alwaysSendMaxTokens": false,
+				"supportsObfuscationOptOut": false,
+				"officialEndpoint": false,
+				"harmonyLeakMitigation": false,
+				"rejectRootObjectUnion": true,
+				"retryWithoutStrictOnGrammarError": false,
+				"stripDeepseekSpecialTokens": false,
+				"streamMarkupHealingPattern": "thinking",
+				"reasoningDeltasMayBeCumulative": false,
+				"emptyLengthFinishIsContextError": false,
+				"usesOpenAIToolCallIdLimit": false,
+				"promptCacheSessionHeader": "x-grok-conv-id"
+			},
+			"supportsComputerUse": false,
+			"compatConfig": {
+				"includeEncryptedReasoning": true,
+				"filterReasoningHistory": false,
+				"supportsImageDetailOriginal": false,
+				"omitReasoningEffort": false,
+				"supportsReasoningEffort": true,
+				"reasoningEffortMap": {
+					"minimal": "low"
+				}
 			}
 		},
 		"grok-build": {

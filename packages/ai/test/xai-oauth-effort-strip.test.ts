@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { buildParams } from "@oh-my-pi/pi-ai/providers/openai-responses";
+import { streamSimple } from "@oh-my-pi/pi-ai/stream";
 import type { AssistantMessage, Context, Model } from "@oh-my-pi/pi-ai/types";
+import { buildModel } from "@oh-my-pi/pi-catalog/build";
 import { Effort } from "@oh-my-pi/pi-catalog/effort";
 import { getSupportedEfforts } from "@oh-my-pi/pi-catalog/model-thinking";
 import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
@@ -78,6 +80,55 @@ describe("effort-dial-less reasoner encoding (regression)", () => {
 const singleUserContext: Context = {
 	messages: [{ role: "user", content: "hello", timestamp: 0 }],
 };
+
+describe("Grok 4.7 Responses effort control", () => {
+	for (const provider of ["xai", "xai-oauth"] as const) {
+		const model = buildModel({
+			id: "grok-4.7",
+			name: "Grok 4.7",
+			api: "openai-responses",
+			provider,
+			baseUrl: "https://api.x.ai/v1",
+			reasoning: true,
+			input: ["text", "image"],
+			contextWindow: 500_000,
+			maxTokens: 64_000,
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		});
+
+		test(`${provider} preserves xhigh and normalizes minimal`, () => {
+			const highest = buildParams(model, singleUserContext, { reasoning: Effort.XHigh }, undefined);
+			expect(highest.params.reasoning).toEqual({ effort: "xhigh" });
+			const minimal = buildParams(model, singleUserContext, { reasoning: Effort.Minimal }, undefined);
+			expect(minimal.params.reasoning).toEqual({ effort: "low" });
+		});
+
+		test(`${provider} sends the configured default without an unsupported summary parameter`, () => {
+			const { params } = buildParams(
+				model,
+				singleUserContext,
+				{ reasoning: model.thinking?.defaultLevel },
+				undefined,
+			);
+			expect(params.reasoning).toEqual({ effort: "high" });
+		});
+
+		test(`${provider} cannot disable mandatory reasoning`, async () => {
+			let payload: unknown;
+			await streamSimple(model, singleUserContext, {
+				apiKey: "test-key",
+				reasoning: Effort.High,
+				disableReasoning: true,
+				forceReasoningOff: true,
+				fetch: async () => new Response("", { status: 200, headers: { "content-type": "text/event-stream" } }),
+				onPayload: value => {
+					payload = value;
+				},
+			}).result();
+			expect(payload).toMatchObject({ reasoning: { effort: "low" } });
+		});
+	}
+});
 
 describe("xAI OAuth Responses reasoning payload (regression)", () => {
 	test("xai-oauth/grok-4.5 leaves reasoning unset when no reasoning was requested", () => {

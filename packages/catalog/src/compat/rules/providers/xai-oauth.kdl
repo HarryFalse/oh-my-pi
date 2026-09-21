@@ -35,7 +35,7 @@ provider "xai-oauth" {
 		supports-reasoning-effort #false
 	}
 	// xhigh-capable SKUs keep xhigh unmapped.
-	models "grok-4.6*" "grok-4.20-multi-agent*" priority=1 {
+	models "grok-4.6*" "grok-4.20-multi-agent*" "grok-4.7*" priority=1 {
 		reasoning-effort-map {
 			minimal "low"
 		}

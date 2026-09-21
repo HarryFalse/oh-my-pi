@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import { buildModel } from "@oh-my-pi/pi-catalog/build";
 import { calculateCost, getBundledModel } from "@oh-my-pi/pi-catalog/models";
 import type { Usage } from "@oh-my-pi/pi-catalog/types";
 
@@ -57,5 +58,34 @@ describe("long-context pricing tier", () => {
 		calculateCost(codexSol, overThreshold);
 		expect(overThreshold.cost.input).toBeCloseTo((codexTier.input / 1e6) * overThreshold.input, 10);
 		expect(overThreshold.cost.output).toBeCloseTo((codexTier.output / 1e6) * 1_000, 10);
+	});
+
+	it("doubles Grok 4.7 whole-request prices at 200000 prompt tokens, including cached input", () => {
+		const model = buildModel({
+			id: "grok-4.7",
+			name: "Grok 4.7",
+			api: "openai-responses",
+			provider: "xai",
+			baseUrl: "https://api.x.ai/v1",
+			reasoning: true,
+			input: ["text", "image"],
+			contextWindow: 500_000,
+			maxTokens: 64_000,
+			cost: { input: 2, output: 6, cacheRead: 0.5, cacheWrite: 0 },
+		});
+		const below = usage({ input: 99_999, output: 1_000, cacheRead: 100_000, cacheWrite: 0 });
+		const boundary = usage({ input: 100_000, output: 1_000, cacheRead: 100_000, cacheWrite: 0 });
+
+		calculateCost(model, below);
+		expect(below.cost.input).toBeCloseTo(0.199998, 10);
+		expect(below.cost.output).toBeCloseTo(0.006, 10);
+		expect(below.cost.cacheRead).toBeCloseTo(0.05, 10);
+		expect(below.cost.total).toBeCloseTo(0.255998, 10);
+
+		calculateCost(model, boundary);
+		expect(boundary.cost.input).toBeCloseTo(0.4, 10);
+		expect(boundary.cost.output).toBeCloseTo(0.012, 10);
+		expect(boundary.cost.cacheRead).toBeCloseTo(0.1, 10);
+		expect(boundary.cost.total).toBeCloseTo(0.512, 10);
 	});
 });

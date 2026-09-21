@@ -6632,7 +6632,45 @@
 				}
 			},
 			{
-				"source": "classes/xai.kdl:39",
+				"source": "classes/xai.kdl:42",
+				"class": "xai",
+				"providers": [
+					"xai",
+					"xai-oauth"
+				],
+				"models": [
+					{
+						"kind": "glob",
+						"value": "grok-4.7*"
+					}
+				],
+				"thinking": {
+					"efforts": [
+						"low",
+						"medium",
+						"high",
+						"xhigh"
+					],
+					"defaultLevel": "high",
+					"requiresEffort": true
+				},
+				"catalog": {
+					"inputModalities": [
+						"text",
+						"image"
+					],
+					"limitsPatch": {
+						"contextWindow": 500000
+					},
+					"longContext": {
+						"inputThreshold": 200000,
+						"inputThresholdInclusive": true,
+						"multiplier": 2
+					}
+				}
+			},
+			{
+				"source": "classes/xai.kdl:59",
 				"class": "xai",
 				"providers": [
 					"xai-oauth"
@@ -13126,6 +13164,10 @@
 					{
 						"kind": "glob",
 						"value": "grok-4.20-multi-agent*"
+					},
+					{
+						"kind": "glob",
+						"value": "grok-4.7*"
 					}
 				],
 				"priority": 1,
@@ -13183,7 +13225,7 @@
 				}
 			},
 			{
-				"source": "providers/xai.kdl:30",
+				"source": "providers/xai.kdl:29",
 				"providers": [
 					"xai"
 				],
@@ -13207,6 +13249,10 @@
 					{
 						"kind": "glob",
 						"value": "grok-4.6*"
+					},
+					{
+						"kind": "glob",
+						"value": "grok-4.7*"
 					}
 				],
 				"wire": {
@@ -13215,7 +13261,7 @@
 				}
 			},
 			{
-				"source": "providers/xai.kdl:34",
+				"source": "providers/xai.kdl:33",
 				"providers": [
 					"xai"
 				],
@@ -13227,6 +13273,10 @@
 					{
 						"kind": "glob",
 						"value": "grok-4.6*"
+					},
+					{
+						"kind": "glob",
+						"value": "grok-4.7*"
 					}
 				],
 				"priority": 1,
@@ -13237,7 +13287,7 @@
 				}
 			},
 			{
-				"source": "providers/xai.kdl:41",
+				"source": "providers/xai.kdl:40",
 				"providers": [
 					"xai"
 				],
@@ -13265,7 +13315,7 @@
 				}
 			},
 			{
-				"source": "providers/xai.kdl:47",
+				"source": "providers/xai.kdl:46",
 				"providers": [
 					"xai"
 				],
